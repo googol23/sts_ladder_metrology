@@ -5,6 +5,9 @@ import logging
 
 from sts_ladder_metrology.sensor_shape import SensorShape
 
+
+logger = logging.getLogger(__name__)
+
 # ---------------------------
 # Residual function (cost function)
 # ---------------------------
@@ -237,38 +240,3 @@ def draw_ladder_residuals(ladder_residual:np.ndarray, fname:str | None = "ladder
     # Save figure
     plt.savefig(fname)
     plt.close(fig)
-
-if __name__ == "__main__":
-    # Setup basic logging
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-
-    from dev_test.fetch_meas import fetch_ladders, fetch_measurements
-    from sts_db_api import db_api as dbapi
-    from sts_geo_layout import SensorType
-
-    ladder_residual = np.empty((0,4))
-
-    for ladder_id, folder in fetch_ladders("/u/dlmeas/STS/", True):
-        measurements = fetch_measurements(ladder_id, folder, use_markers=True, use_surface=False)
-
-        for module_id, pts in measurements.items():
-            print(f"Module: {module_id}, points: {pts.shape[0]}")
-
-            # Get sensor size
-            sensor_name = dbapi.get_module_sensor(module_id)
-            if sensor_name is None or not str(sensor_name):
-                raise ValueError(f"Missing sensor_name for module {module_id}")
-            sensor_size = SensorType(int(str(sensor_name)[-1])).size_xy()
-
-            optimized_shape = fit_sensor_measurements(pts, sensor_size)
-            print("Optimized center:", optimized_shape.center)
-            print("Optimized angles (rad):", optimized_shape.angles)
-
-            # Visualize
-            # visualize_optimization(optimized_shape, pts, fname=f"{module_id}.png")
-
-            ladder_residual = np.vstack((ladder_residual, np.array([(*p,optimized_shape.distance_to_edge(p)) for p in pts])))
-
-        draw_ladder_residuals(ladder_residual)
-        
