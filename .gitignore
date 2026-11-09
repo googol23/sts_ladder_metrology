@@ -1,0 +1,59 @@
+# Python bytecode and interpreter caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments and local environment configuration
+.venv/
+.venv-*/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# Packaging and build products
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
+
+# Test, coverage, type-checker, and linter caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+.mypy_cache/
+.pyright/
+.pyre/
+.pytype/
+.ruff_cache/
+.hypothesis/
+
+# Notebook and editor metadata
+.ipynb_checkpoints/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+
+# Local measurement inputs and generated analysis products
+/sources/
+/output/
+/ladder_metrology.yaml
+/clustering_sensors.png
+/ladder_residual*
+
+# Runtime logs
+*.log
